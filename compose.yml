@@ -1,0 +1,41 @@
+services:
+  crautos:
+    build: ./CRAUTOS
+    env_file:
+      - .env
+    ports:
+      - "4321:4321"
+    depends_on:
+      - crautos-backend
+    restart: always
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./CRAUTOS
+          target: /home/app
+  crautos-backend:
+    build: ./CRAUTOS-BACKEND
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - sqlserver
+    restart: always
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./CRAUTOS-BACKEND
+          target: /home/app
+  sqlserver:
+    user: "0:0"
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    volumes:
+      - db_storage:/var/opt/mssql/data
+    env_file:
+      - .env
+    ports:
+      - "1433:1433"
+    restart: always
+volumes:
+  db_storage:
