@@ -20,22 +20,51 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - sqlserver
+      - postgres
     restart: always
     develop:
       watch:
         - action: sync+restart
           path: ./CRAUTOS-BACKEND
           target: /home/app
-  sqlserver:
-    user: "0:0"
-    image: mcr.microsoft.com/mssql/server:2022-latest
+  postgrest:
+    image: postgrest/postgrest:latest
+    ports:
+      - "3001:3000"
+    env_file:
+      - .env
+    restart: always
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:17
     volumes:
-      - db_storage:/var/opt/mssql/data
+      - db_storage:/var/lib/postgresql
+    restart: always
+    env_file:
+      - .env
+    expose:
+      - 5432
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
     env_file:
       - .env
     ports:
-      - "1433:1433"
+      - "8080:8080"
+    depends_on:
+      - postgres
+    restart: always
+  swagger:
+    image: swaggerapi/swagger-ui:latest
+    ports:
+      - "8081:8080"
+    env_file:
+      - .env
+    depends_on:
+      - postgrest
     restart: always
 volumes:
   db_storage:
+  pgadmin_data:
