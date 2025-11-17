@@ -1,9 +1,15 @@
 {
   "name": "crautos-backend",
   "dependencies": {
+    "@types/express-session": "^1.18.2",
     "@types/joi": "^17.2.2",
+    "@types/passport": "^1.0.17",
+    "@types/passport-google-oauth20": "^2.0.17",
     "express": "^5.1.0",
+    "express-session": "^1.18.2",
     "joi": "^18.0.1",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
     "swagger-ui-express": "^5.0.1",
     "tsoa": "^6.6.0"
   },
