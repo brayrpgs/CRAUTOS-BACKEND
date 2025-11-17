@@ -6,7 +6,25 @@
 		"parameters": {},
 		"requestBodies": {},
 		"responses": {},
-		"schemas": {},
+		"schemas": {
+			"AuthResponse": {
+				"properties": {
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					},
+					"user": {}
+				},
+				"required": [
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
 		"securitySchemes": {}
 	},
 	"info": {
@@ -29,6 +47,88 @@
 						}
 					}
 				},
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/auth/login": {
+			"get": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "Redirects to Google OAuth"
+					},
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "Initiates Google OAuth authentication",
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/auth/google/callback": {
+			"get": {
+				"operationId": "GoogleCallback",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Authentication failed"
+					}
+				},
+				"description": "Google OAuth callback endpoint",
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/auth/logout": {
+			"get": {
+				"operationId": "Logout",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Logout endpoint",
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/auth/user": {
+			"get": {
+				"operationId": "GetUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Not authenticated"
+					}
+				},
+				"description": "Get current user session",
 				"security": [],
 				"parameters": []
 			}
