@@ -7,6 +7,7 @@ import { UseJson } from "./middlewares/json.js";
 import { UseSession } from "./middlewares/session.js";
 import { UsePassport } from "./middlewares/passport.js";
 import { passport } from "./auth/passport.js";
+import jwt from "jsonwebtoken";
 
 const app = express();
 
@@ -19,15 +20,21 @@ UsePassport(app)
 
 // Setup passport routes manually since TSOA can't handle authentication flows
 app.get('/auth/login', passport.authenticate('google', { scope: ['profile', 'email'] }));
-app.get('/auth/google/callback', 
-    passport.authenticate('google', { failureRedirect: '/auth/login' }),
-    (req, res) => {
-        res.json({
-            success: true,
-            message: 'Authentication successful',
-            user: req.user
-        });
+app.get('/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/auth/login' }),
+  (req, res) => {
+    if (req.user !== undefined) {
+      const token = jwt.sign(req.user, process.env.SESSION_SECRET as string);
+      res.json({
+        success: true,
+        message: 'Authentication successful',
+        usertoken: token
+      });
+    } else {
+      res.status(401).json({ success: false, message: 'Authentication failed' });
     }
+
+  }
 );
 
 //register routes to use swaggerUi
