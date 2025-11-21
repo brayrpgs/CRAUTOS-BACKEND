@@ -13,7 +13,6 @@ import { user } from './models/user.js'
 import { log } from 'console'
 import { errorPostgRest } from './models/errorPostgRest.js'
 import { sendEmail } from './services/Emails.js'
-import { UseCors } from './middlewares/cors.js';
 import { successAuthHTML } from './resources/templates/successAuth.js'
 import { errorAuthHTML } from './resources/templates/errorAuth.js'
 
@@ -25,7 +24,6 @@ useUrlEncoded(app)
 UseJson(app)
 UseSession(app)
 UsePassport(app)
-UseCors(app)
 
 // Setup passport routes manually since TSOA can't handle authentication flows
 app.get('/auth/login', passport.authenticate('google', { scope: ['profile', 'email'] }))
